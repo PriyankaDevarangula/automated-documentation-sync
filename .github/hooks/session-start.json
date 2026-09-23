@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "bash -lc 'for d in .github/instructions .github/agents .github/prompts .github/skills; do if [ ! -d \"$d\" ]; then echo \"Missing required customization directory: $d\"; exit 1; fi; done; echo \"Repository customization directories are present.\"'",
+        "timeout": 10000,
+        "continueOnError": false
+      },
+      {
+        "command": "pwsh -NoProfile -Command \"$dirs = @('.github/instructions','.github/agents','.github/prompts','.github/skills'); foreach ($d in $dirs) { if (-not (Test-Path $d -PathType Container)) { Write-Error \"Missing required customization directory: $d\"; exit 1 } }; Write-Host 'Repository customization directories are present.'\"",
+        "timeout": 10000,
+        "continueOnError": false
+      }
+    ]
+  }
+}

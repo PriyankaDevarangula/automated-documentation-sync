@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "command": "bash -lc 'set -e; if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then if [ -d .github ]; then for p in .github/instructions .github/agents .github/prompts .github/skills; do [ -d \"$p\" ] || { echo \"Missing required customization directory: $p\"; exit 1; }; done; fi; fi; echo \"Repository customization structure is valid.\"'",
+        "timeout": 10000,
+        "continueOnError": false
+      },
+      {
+        "command": "pwsh -NoProfile -Command \"$repo = git rev-parse --is-inside-work-tree 2>$null; if ($LASTEXITCODE -eq 0) { $dirs = @('.github/instructions','.github/agents','.github/prompts','.github/skills'); foreach ($d in $dirs) { if (-not (Test-Path $d -PathType Container)) { Write-Error \"Missing required customization directory: $d\"; exit 1 } }; Write-Host 'Repository customization structure is valid.' }\"",
+        "timeout": 10000,
+        "continueOnError": false
+      }
+    ]
+  }
+}
